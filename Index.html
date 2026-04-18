@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KU-Hub | 학술·행사 통합 아카이브</title>
+    <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --ku-crimson: #a41f35; /* 학교 상징색 느낌의 포인트 */
+            --bg-gray: #f4f7f6;
+            --text-dark: #2d3436;
+            --accent-blue: #0984e3;
+            --status-ongoing: #00b894;
+            --status-closed: #636e72;
+        }
+
+        body {
+            font-family: 'Pretendard', sans-serif;
+            background-color: var(--bg-gray);
+            color: var(--text-dark);
+            margin: 0; padding: 0;
+        }
+
+        /* Header & Navigation */
+        header {
+            background: #fff;
+            padding: 1rem 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .logo { font-size: 1.5rem; font-weight: 800; color: var(--ku-crimson); }
+        
+        .search-bar {
+            flex-grow: 0.5;
+            position: relative;
+        }
+
+        .search-bar input {
+            width: 100%;
+            padding: 8px 15px 8px 35px;
+            border-radius: 20px;
+            border: 1px solid #dfe6e9;
+            outline: none;
+        }
+
+        .search-bar i { position: absolute; left: 12px; top: 10px; color: #b2bec3; }
+
+        /* Main Layout */
+        .container {
+            display: grid;
+            grid-template-columns: 240px 1fr 280px;
+            gap: 20px;
+            padding: 20px 5%;
+        }
+
+        /* Left Sidebar: Categories */
+        .sidebar-left .menu-group {
+            background: #fff;
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+
+        .menu-item {
+            padding: 10px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .menu-item:hover { background: #f0f2f5; }
+        .menu-item.active { background: var(--ku-crimson); color: white; }
+
+        /* Center Content: Cards */
+        .content-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .card {
+            background: #fff;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 15px;
+            position: relative;
+            transition: transform 0.2s;
+            border: 1px solid transparent;
+        }
+
+        .card:hover { transform: translateY(-3px); border-color: #eee; }
+
+        .status-badge {
+            font-size: 11px;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .ongoing { background: #e8f8f5; color: var(--status-ongoing); }
+        .closed { background: #f1f2f6; color: var(--status-closed); }
+
+        .card-title { font-size: 1.2rem; font-weight: 700; margin: 10px 0; }
+        
+        .card-info { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; font-size: 0.9rem; color: #636e72; }
+        .card-info i { width: 18px; color: var(--ku-crimson); }
+
+        .favorite-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 1.2rem;
+            color: #dfe6e9;
+            cursor: pointer;
+        }
+        .favorite-btn.active { color: #fdcb6e; }
+
+        /* Right Sidebar: Notifications & Real-time */
+        .sidebar-right .widget {
+            background: #fff;
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+
+        .widget-title { font-weight: 700; margin-bottom: 15px; display: flex; align-items: center; gap: 8px; }
+
+        .notice-item {
+            font-size: 0.85rem;
+            padding: 10px 0;
+            border-bottom: 1px solid #f1f2f6;
+        }
+
+        .notice-item .time { font-size: 10px; color: #b2bec3; }
+
+        @media (max-width: 1024px) {
+            .container { grid-template-columns: 1fr; }
+            .sidebar-left, .sidebar-right { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="logo">KU-Hub</div>
+    <div class="search-bar">
+        <i class="fas fa-search"></i>
+        <input type="text" placeholder="관심 있는 강연, 동아리를 검색해보세요">
+    </div>
+    <div class="user-profile">
+        <i class="fas fa-bell" style="margin-right: 15px; cursor:pointer;"></i>
+        <i class="fas fa-user-circle fa-lg"></i>
+    </div>
+</header>
+
+<div class="container">
+    <aside class="sidebar-left">
+        <div class="menu-group">
+            <h4 style="margin-top:0">Category</h4>
+            <div class="menu-item active"><i class="fas fa-th-large"></i> 전체 보기</div>
+            <div class="menu-item"><i class="fas fa-chalkboard-teacher"></i> 특강/강연</div>
+            <div class="menu-item"><i class="fas fa-users"></i> 학회/동아리</div>
+            <div class="menu-item"><i class="fas fa-handshake"></i> 제휴/이벤트</div>
+            <div class="menu-item"><i class="fas fa-briefcase"></i> 인턴/공모전</div>
+        </div>
+        <div class="menu-group">
+            <h4>My Favorites</h4>
+            <div class="menu-item" style="font-size:0.9rem; color:#636e72;">즐겨찾는 공지가 없습니다.</div>
+        </div>
+    </aside>
+
+    <main>
+        <div class="content-header">
+            <h3>최신 공지 아카이브</h3>
+            <select style="border:none; background:transparent; font-weight:600;">
+                <option>최신순</option>
+                <option>마감임박순</option>
+            </select>
+        </div>
+
+        <article class="card">
+            <i class="fas fa-star favorite-btn active"></i>
+            <span class="status-badge ongoing">진행 중</span>
+            <div class="card-title">경제학과 초빙 교수 특별 강연: "데이터로 보는 거시경제"</div>
+            <div class="card-info">
+                <div><i class="far fa-calendar-alt"></i> 2026.04.25 (목) 16:00</div>
+                <div><i class="fas fa-map-marker-alt"></i> 정경관 201호</div>
+                <div><i class="fas fa-user-friends"></i> 잔여 12명 / 총 50명</div>
+                <div><i class="fas fa-link"></i> <a href="#" style="color:inherit; text-decoration:none;">신청 폼 바로가기</a></div>
+            </div>
+        </article>
+
+        <article class="card">
+            <i class="fas fa-star favorite-btn"></i>
+            <span class="status-badge closed">마감 임박</span>
+            <div class="card-title">제 15회 영어영문학회 정기 학술제 발표자 모집</div>
+            <div class="card-info">
+                <div><i class="far fa-calendar-alt"></i> ~ 2026.04.20까지</div>
+                <div><i class="fas fa-map-marker-alt"></i> 온라인 접수</div>
+                <div><i class="fas fa-user-friends"></i> T.O 5명 내외</div>
+            </div>
+        </article>
+
+        <article class="card">
+            <i class="fas fa-star favorite-btn"></i>
+            <span class="status-badge ongoing">진행 중</span>
+            <div class="card-title">대학가 제휴: '모닝 커피' 구독 서비스 학생 할인</div>
+            <div class="card-info">
+                <div><i class="far fa-calendar-alt"></i> 상시 진행</div>
+                <div><i class="fas fa-map-marker-alt"></i> 학교 앞 제휴 카페 5곳</div>
+                <div><i class="fas fa-tag"></i> 학생증 제시 시 20% 할인</div>
+            </div>
+        </article>
+    </main>
+
+    <aside class="sidebar-right">
+        <div class="widget">
+            <div class="widget-title"><i class="fas fa-bolt" style="color:#fbc531"></i> 실시간 이슈 (카톡방)</div>
+            <div class="notice-item">
+                <span class="time">10분 전</span><br>
+                <strong>경제학 특강</strong> 장소가 경영관에서 정경관으로 변경되었습니다!
+            </div>
+            <div class="notice-item">
+                <span class="time">1시간 전</span><br>
+                <strong>영어영문 과잠</strong> 추가 공구가 시작되었다고 합니다.
+            </div>
+            <div class="notice-item">
+                <span class="time">3시간 전</span><br>
+                정경대 학생회실에서 분실된 지갑을 보관 중입니다.
+            </div>
+        </div>
+
+        <div class="widget">
+            <div class="widget-title"><i class="fas fa-info-circle"></i> 빠른 알림 설정</div>
+            <p style="font-size:0.8rem; color:#636e72;">관심 키워드를 등록하면 변경사항 발생 시 푸시 알림을 보내드립니다.</p>
+            <button style="width:100%; padding:10px; background:var(--ku-crimson); color:white; border:none; border-radius:8px; cursor:pointer;">키워드 등록하기</button>
+        </div>
+    </aside>
+</div>
+
+<script>
+    // 즐겨찾기 버튼 클릭 인터랙션
+    document.querySelectorAll('.favorite-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            this.classList.toggle('active');
+            if(this.classList.contains('active')) {
+                alert('즐겨찾기에 추가되었습니다!');
+            }
+        });
+    });
+
+    // 알림 버튼 시뮬레이션
+    document.querySelector('.fa-bell').addEventListener('click', () => {
+        alert('새로운 변경사항 2건이 있습니다.');
+    });
+</script>
+
+</body>
+</html>
